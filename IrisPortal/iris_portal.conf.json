@@ -6,7 +6,7 @@
   "video": {
     "cameras": [
       {
-        "url": "rtsp://raspberrypi.local:8888/",
+        "url": "rtsp://raspberrypi.local:8554/",
         "type": "video",
         "name": "Test Camera",
         "id": "iris-test00"
@@ -19,10 +19,10 @@
         "-f segment -segment_time {interval} -segment_format mp4",
         "-use_wallclock_as_timestamps 1 -reset_timestamps 1",
         "-segment_list {directory}/{camera_id}_index.txt",
-        "{directory}/{camera_id}_out%Y-%m-%d_%H-%M-%S.mp4"
+        "{directory}/{camera_id}_out_%Y-%m-%d_%H-%M-%S.mp4"
       ],
       "config": {
-        "interval": 300
+        "interval": 20
       }
     }
   },
