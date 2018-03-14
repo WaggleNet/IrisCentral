@@ -20,11 +20,20 @@ def _write_config(data, filename=default_config):
 
 # READ ONLY AREA
 
-def get_capture_command(**kwargs):
+def get_capture_command(string=False, **kwargs):
     config = _read_config()
-    cmd_str = ' '.join(config['video']['capturer']['cmd'])
+    cmd_ = config['video']['capturer']['cmd']
     cmd_conf = config['video']['capturer']['config']
-    return cmd_str.format(**kwargs, **cmd_conf)
+    if string:
+        cmd_str = ' '.join(cmd_)
+        return cmd_str.format(**kwargs, **cmd_conf)
+    cmd_list = []
+    for i in cmd_:
+        cmd_list.extend(i.split())
+    return [
+        i.format(**kwargs, **cmd_conf)
+        for i in cmd_list
+    ]
 
 
 def get_stream_dir():
