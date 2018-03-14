@@ -1,0 +1,32 @@
+{
+  "locations": {
+    "stream": "/tmp/iris/stream",
+    "upload": "/tmp/iris/upload"
+  },
+  "video": {
+    "cameras": [
+      {
+        "url": "rtsp://raspberrypi.local:8888/",
+        "type": "video",
+        "name": "Test Camera",
+        "id": "iris-test00"
+      }
+    ],
+    "capturer": {
+      "cmd": [
+        "ffmpeg -i {url} -c copy -map 0 -strftime 1",
+        "-f segment -segment_time {interval} -segment_format mp4",
+        "-use_wallclock_as_timestamps 1 -reset_timestamps 1",
+        "-segment_list {directory}/{camera_id}_index.txt",
+        "{directory}/{camera_id}_out%Y-%m-%d_%H-%M-%S.mp4"
+      ],
+      "config": {
+        "interval": 300
+      }
+    }
+  },
+  "console": {
+    "address": "127.0.0.1",
+    "port": "6723"
+  }
+}

@@ -1,0 +1,69 @@
+"""
+    Config.py: Reads and writes configuration settings
+    from and to the configuration file.
+"""
+
+from simplejson import dump, load
+
+default_config = 'iris_portal.conf.json'
+
+def _read_config(filename=default_config):
+    with open(filename, 'rb') as f:
+        result = load(f)
+    return result
+
+
+def _write_config(data, filename=default_config):
+    with open(filename, 'wb') as f:
+        dump(data, f)
+
+
+# READ ONLY AREA
+
+def get_capture_command(**kwargs):
+    config = _read_config()
+    cmd_str = ' '.join(config['video']['capturer']['cmd'])
+    cmd_conf = config['video']['capturer']['config']
+    return cmd_str.format(**kwargs, **cmd_conf)
+
+
+def get_stream_dir():
+    config = _read_config()
+    return config['locations']['stream']
+
+
+def get_upload_dir():
+    config = _read_config()
+    return config['locations']['upload']
+
+
+# READ/WRITE AREA
+
+def set_capture_config(data):
+    config = _read_config()
+    config['video']['capturer']['config'] = data
+    _write_config(config)
+
+
+def get_cameras():
+    config = _read_config()
+    return config.get('video', {}).get('cameras', [])
+
+
+def set_cameras(data):
+    config = _read_config()
+    config['video']['cameras'] = data
+    _write_config(config)
+
+
+def add_camera(**data):
+    cameras = get_cameras()
+    cameras.append(data)
+    set_cameras(cameras)
+
+
+def remove_camera(index):
+    cameras = get_cameras()
+    cameras.pop(index)
+    set_cameras(cameras)
+
