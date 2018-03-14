@@ -45,7 +45,8 @@ class capturerProcess(contextualProcess):
         streams_ = self.streams.status
         cmd_ = streams_[k]['capture_cmd']
         self.logger.debug('Executing {}'.format(cmd_))
-        self.processes[k] = Popen(cmd_, stderr=DEVNULL, stdout=DEVNULL, shell=True)
+        self.processes[k] = Popen(cmd_, stderr=DEVNULL, stdout=DEVNULL)
+        # self.processes[k] = Popen(cmd_)
         streams_[k]['status'] = 'running'
         self.streams.status = streams_
 
@@ -82,9 +83,9 @@ class capturerProcess(contextualProcess):
                             v['status'] = 'dead'
                             exitcode = self.processes[k].poll()
                             if exitcode == 0:
-                                self.logger.warn('Capturer for {} terminated normally.'.format(k))
+                                self.logger.error('Capturer for {} terminated normally.'.format(k))
                             else:
-                                self.logger.warn('Capturer for {} abnormal exit with code {}.'.format(k, exitcode))
+                                self.logger.error('Capturer for {} abnormal exit with code {}.'.format(k, exitcode))
                             self.streams.status = streams_
                     else:
                         # Bring up the process
