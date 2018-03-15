@@ -12,8 +12,11 @@ class fileTransferProcess(contextualProcess):
     def probe_available_volumes():
         results = []
         for i in Path(get_devices_dir()).glob('*'):
-            if i.is_dir() and Path(i, 'iris_storage.conf').exists():
-                results.append(i)
+            try:
+                if i.is_dir() and Path(i, 'iris_storage.conf').exists():
+                    results.append(i)
+            except:
+                pass
         return results
 
     def run(self):
