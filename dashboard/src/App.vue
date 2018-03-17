@@ -4,6 +4,7 @@
       .uk-width-large
         h2(style='margin-bottom: 0') IrisCentral
         h5(style='margin-top: 0') by WaggleNet
+        h6(style='margin-top: 0') (c) Jimmy He, Michael Chen
         hr
         disks-page
       .uk-width-expand(v-vk-margin='')

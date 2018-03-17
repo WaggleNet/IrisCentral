@@ -4,7 +4,7 @@
     p.status-labels
       vk-label(v-if='data.status=="active"') Active
       vk-label(type='warning' v-if='data.status=="ejected"') Ejected
-      vk-label(type='success' v-if='data.candidate') In Use
+      vk-label(type='success' v-if='data.in_use') In Use
     span {{data.free}} / {{data.total}}
     progress.disk-space(:value='getFreeRatio(data)' max=100)
     div(slot='footer')

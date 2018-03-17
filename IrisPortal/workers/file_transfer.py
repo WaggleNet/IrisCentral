@@ -63,7 +63,6 @@ class fileTransferProcess(contextualProcess):
     def get_cadidate_drive(self, file_size):
         drives = self.filecopy.drives
         for k, v in drives.items():
-            print(v)
             if v['status'] != 'active': continue
             if v['space_limit'] >= v['free_space'] - file_size:
                 continue

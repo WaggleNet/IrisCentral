@@ -4,6 +4,7 @@ from workers.manager import managerProcess
 from workers.logger import LoggerProcess
 from sys import platform
 from services.api import *
+import logging
 
 
 app = Flask(__name__)
@@ -45,6 +46,8 @@ if __name__ == '__main__':
     p = managerProcess(context)
     l.start()
     p.start()
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
     app.run()
     # Join the child processes
     p.join()

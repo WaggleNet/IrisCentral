@@ -26,7 +26,7 @@ export default {
   },
   mounted () {
     this.getCameras()
-    setInterval(this.getCameras, 5000)
+    setInterval(this.getCameras, 2000)
   },
   methods: {
     getCameras () {

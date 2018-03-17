@@ -28,7 +28,7 @@ export default {
   },
   mounted () {
     this.getDisks()
-    setInterval(this.getDisks, 5000)
+    setInterval(this.getDisks, 2000)
   },
   methods: {
     getDisks () {
