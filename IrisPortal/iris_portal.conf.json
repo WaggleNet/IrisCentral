@@ -6,10 +6,10 @@
   "video": {
     "cameras": [
       {
-        "url": "rtsp://raspberrypi.local:8554/",
+        "url": "rtsp://iris01v.local:8554/",
         "type": "video",
-        "name": "Test Camera",
-        "id": "iris-test00"
+        "name": "Test Camera 800MP-IR",
+        "id": "iris01v"
       }
     ],
     "capturer": {
@@ -22,7 +22,7 @@
         "{directory}/{camera_id}_out_%Y-%m-%d_%H-%M-%S.mp4"
       ],
       "config": {
-        "interval": 20
+        "interval": 60
       }
     }
   },

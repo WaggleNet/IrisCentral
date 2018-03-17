@@ -4,6 +4,8 @@
 """
 
 from simplejson import dump, load
+from sys import platform
+from getpass import getuser
 
 default_config = 'iris_portal.conf.json'
 
@@ -44,6 +46,16 @@ def get_stream_dir():
 def get_upload_dir():
     config = _read_config()
     return config['locations']['upload']
+
+
+def get_devices_dir():
+    config = _read_config()
+    if 'media' in config['locations']:
+        return config['locations']['media']
+    if platform == 'linux' or platform == 'linux2':
+        return '/media/{}/'.format(getuser())
+    if platform == 'darwin':
+        return '/Volumes/'
 
 
 # READ/WRITE AREA
