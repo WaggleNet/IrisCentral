@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+.page-section
   h3.uk-heading-bullet Cameras
     vk-label(type='success')
       vk-icon(icon='check')

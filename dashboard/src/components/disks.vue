@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(v-vk-margin='')
+  .page-section(v-vk-margin='')
     h3.uk-heading-bullet Storage Devices
       vk-label(type='warning')
         vk-icon(icon='bell')

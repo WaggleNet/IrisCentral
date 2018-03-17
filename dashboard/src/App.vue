@@ -11,7 +11,6 @@
         hr
         camera-page
         hr
-        hr
         sync-page
 </template>
 
@@ -21,7 +20,8 @@ import DisksPage from './components/disks'
 import CameraPage from './components/cameras'
 import SyncPage from './components/sync'
 import StatusPage from './components/status'
-import './uikit.css'
+import './assets/uikit.css'
+import './assets/uikit-mod.sass'
 export default {
   name: 'App',
   components: {
@@ -45,28 +45,6 @@ export default {
   padding: 40px
   margin-left: 0px
 
-// Patching uk-card
-.uk-card-body
-  padding: 25px
-
-.uk-card-footer
-  padding: 15px 20px
-
-.uk-card-title
-  margin-bottom: 15px
-
-.uk-button
-  margin-right: 15px
-  vertical-align: middle
-  *
-    vertical-align: middle
-
-.uk-margin-small-top
-  margin-top: 15px !important
-
-h3.uk-heading-bullet .uk-label
-  margin-left: 10px
-
 .card-title
   margin-bottom: 0
 
@@ -74,4 +52,7 @@ p.status-labels
   margin-top: 0
   .uk-label
     margin-right: 10px
+
+div.page-section
+  margin-bottom: 21px
 </style>
