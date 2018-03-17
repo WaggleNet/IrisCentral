@@ -8,10 +8,10 @@
     span {{data.free}} / {{data.total}}
     progress.disk-space(:value='getFreeRatio(data)' max=100)
     div(slot='footer')
-      vk-button(type='text')
+      vk-button(type='text' @click='handleEject')
         vk-icon(icon='sign-out')
         span Eject
-      vk-button(type='text')
+      vk-button(type='text' @click='handleChangeLimit')
         vk-icon(icon='bolt')
         span Change limit
 </template>
@@ -23,6 +23,14 @@ export default {
     getFreeRatio (data) {
       let r = (data.total_capacity - data.free_space) / data.total_capacity
       return Math.trunc(r * 100)
+    },
+    handleEject (e) {
+      e.preventDefault()
+      this.$emit('eject')
+    },
+    handleChangeLimit (e) {
+      e.preventDefault()
+      // TODO: Change limit implementation
     }
   }
 }

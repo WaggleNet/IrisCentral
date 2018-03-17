@@ -4,55 +4,51 @@
       vk-label(type='warning')
         vk-icon(icon='bell')
         span Low Space
-    disk-card(v-for='i in disks' :data='i' :key='i.id')
+    disk-card(
+      v-for='i in disks'
+      :data='i'
+      :key='i.id'
+      @eject='ejectDisk(i.id)'
+      )
 </template>
 
 <script>
 import DiskCard from './disk-card'
 import { getReadableFileSizeString } from '../utils/humanreadable'
+import wretch from 'wretch'
 export default {
   components: {
     DiskCard
   },
   data () {
-    let dummy = this.getDummyData()
-    dummy.forEach(i => {
-      i.free = getReadableFileSizeString(i.free_space)
-      i.total = getReadableFileSizeString(i.total_capacity)
-      i.limit = getReadableFileSizeString(i.space_limit)
-    })
     return {
-      disks: dummy
+      disks: [],
+      loading: true
     }
   },
+  mounted () {
+    this.getDisks()
+    setInterval(this.getDisks, 5000)
+  },
   methods: {
-    getDummyData () {
-      return [
-        {
-          id: '/Volumes/iristest01',
-          free_space: 1503238553,
-          total_capacity: 2362232012,
-          space_limit: 0,
-          candidate: true,
-          status: 'active'
-        },
-        {
-          id: '/Volumes/iristest02',
-          free_space: 403238553,
-          total_capacity: 2362232012,
-          space_limit: 0,
-          candidate: false,
-          status: 'active'
-        },
-        {
-          id: '/Volumes/iristest03',
-          free_space: 124353342,
-          total_capacity: 2362232012,
-          space_limit: 0,
-          candidate: false,
-          status: 'ejected'
-        }
-      ]
+    getDisks () {
+      this.loading = true
+      wretch('/api/drives').get()
+        .json(data => {
+          data.forEach(i => {
+            i.free = getReadableFileSizeString(i.free_space)
+            i.total = getReadableFileSizeString(i.total_capacity)
+            i.limit = getReadableFileSizeString(i.space_limit)
+          })
+          this.disks = data
+          this.loading = false
+        })
+    },
+    ejectDisk (id) {
+      wretch('/api/eject?id=' + encodeURIComponent(id)).get()
+        .json(data => {
+          this.getDisks()
+        })
     }
   }
 }

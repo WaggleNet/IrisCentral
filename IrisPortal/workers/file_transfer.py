@@ -46,6 +46,7 @@ class fileTransferProcess(contextualProcess):
                     fs_stat = statvfs(i)
                     disk_config['total_capacity'] = fs_stat.f_blocks * fs_stat.f_frsize
                     disk_config['free_space'] = fs_stat.f_bavail * fs_stat.f_frsize
+                    disk_config['in_use'] = False
                     drives[str(i)] = disk_config
             except Exception as e:
                 self.logger.debug('Ignoring drive {} due to {}'.format(i, e.__repr__()))
@@ -94,11 +95,24 @@ class fileTransferProcess(contextualProcess):
                 return
             to_copy = available_files[0]
             candidate_drive = self.get_cadidate_drive(path.getsize(to_copy))
-            self.logger.debug('Starting to copy {} to {}'.format(to_copy, candidate_drive))
-            # Actually copy it
-            copy2(to_copy, str(Path(candidate_drive, 'iris')))
-            remove(to_copy)
-            self.logger.debug('{} copied and deleted.'.format(to_copy))
+            if candidate_drive:
+                # Mark the drive in use
+                drives = self.filecopy.drives
+                drives[candidate_drive]['in_use'] = True
+                self.filecopy.drives = drives
+                try:
+                    self.logger.debug('Starting to copy {} to {}'.format(to_copy, candidate_drive))
+                    # Actually copy it
+                    copy2(to_copy, str(Path(candidate_drive, 'iris')))
+                    remove(to_copy)
+                    self.logger.debug('{} copied and deleted.'.format(to_copy))
+                finally:
+                    # Mark the drive idle
+                    drives = self.filecopy.drives
+                    drives[candidate_drive]['in_use'] = False
+                    self.filecopy.drives = drives
+            else:
+                self.logger.info('No candidate drives, not copying.')
         except Exception as e:
             self.logger.warning('Copy of {} failed due to error: {}'.format(to_copy, e.__repr__()))
 

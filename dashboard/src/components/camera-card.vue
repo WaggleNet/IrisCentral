@@ -4,7 +4,7 @@
     small {{data.url}}
     p.status-labels(v-if='data.status == "running"')
       vk-label(type='success') Active
-    p.status-labels(v-else-if='data.status == "terminated"')
+    p.status-labels(v-else-if='data.status == "dead"')
       vk-label(type='danger') Terminated
     p.status-labels(v-else-if='data.status == "pending"')
       vk-label(type='warning') Pending

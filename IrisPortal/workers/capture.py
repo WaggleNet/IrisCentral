@@ -73,7 +73,7 @@ class capturerProcess(contextualProcess):
         self.logger.info('Starting to spawn capturers.')
         try:
             while True:
-                sleep(1)
+                sleep(2)
                 streams_ = self.streams.status
                 for k, v in streams_.items():
                     if v['status'] == 'running':

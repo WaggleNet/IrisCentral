@@ -14,7 +14,8 @@
     "@vuikit/icons": "^0.8.0",
     "lodash": "^4.17.5",
     "vue": "^2.5.2",
-    "vuikit": "^0.8.0"
+    "vuikit": "^0.8.0",
+    "wretch": "^1.1.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

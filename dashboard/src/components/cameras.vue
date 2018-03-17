@@ -1,42 +1,43 @@
 <template lang="pug">
 .page-section
   h3.uk-heading-bullet Cameras
-    vk-label(type='success')
+    vk-label(type='primary')
       vk-icon(icon='check')
-      span 3/4 Capturing
+      span {{running}}/{{total}} Capturing
   .camera-list-group(v-vk-margin='')
     camera-card(v-for='i in cameras' :data='i' :key='i.id')
 </template>
 
 <script>
 import CameraCard from './camera-card'
+import wretch from 'wretch'
+import _ from 'lodash'
 export default {
   components: {
     CameraCard
   },
   data () {
     return {
-      cameras: this.getDummyData()
+      cameras: [],
+      loading: true,
+      total: 0,
+      running: 0
     }
   },
+  mounted () {
+    this.getCameras()
+    setInterval(this.getCameras, 5000)
+  },
   methods: {
-    getDummyData () {
-      return [
-        {
-          name: 'Test Camera 0',
-          id: 'iristestv0',
-          url: 'rtsp://raspberrypi.local:8554/',
-          type: 'video',
-          status: 'terminated'
-        },
-        {
-          name: 'IrisCam v1 500MP VL',
-          id: 'iristestv1',
-          url: 'rtsp://iris01v.local:8554',
-          type: 'video',
-          status: 'running'
-        }
-      ]
+    getCameras () {
+      this.loading = true
+      wretch('/api/cameras').get()
+        .json(data => {
+          this.cameras = data
+          this.loading = false
+          this.total = data.length
+          this.running = _.countBy(data, i => i.status === 'running').true || 0
+        })
     }
   }
 }
