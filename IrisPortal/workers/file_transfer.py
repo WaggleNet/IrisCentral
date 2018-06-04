@@ -13,6 +13,7 @@ class fileTransferProcess(contextualProcess):
         super().__init__(context, 'FileTransfer')
         self.filecopy = self.context['filecopy']
         self.filecopy.drives = {}
+        self.filecopy.active = False
 
     def probe_available_volumes(self):
         drives = self.filecopy.drives

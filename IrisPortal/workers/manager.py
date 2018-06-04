@@ -1,6 +1,7 @@
 from workers.base import contextualProcess
 from workers.capture import capturerProcess
 from workers.file_transfer import fileTransferProcess
+from workers.uploader import uploaderProcess
 from time import sleep
 
 
@@ -9,7 +10,8 @@ class managerProcess(contextualProcess):
         super().__init__(context, 'Manager')
         self.jobs = {
             "capturer": capturerProcess,
-            "transfer": fileTransferProcess
+            "transfer": fileTransferProcess,
+            "uploader": uploaderProcess
         }
         self.workers = {}
 

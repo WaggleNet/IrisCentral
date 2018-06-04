@@ -58,6 +58,28 @@ def get_devices_dir():
         return '/Volumes/'
 
 
+def get_uploader_location():
+    config = _read_config()
+    if 'upload' in config and 'location' in config['upload']:
+        return config['upload']['location']
+    else:
+        return 'IrisRecordings'
+
+
+def get_uploader_config():
+    config = _read_config()
+    if 'webdav' in config.get('upload', {}):
+        return config['upload']['webdav']
+    return None
+
+
+def get_uploader_enabled():
+    config = _read_config()
+    if get_uploader_config():
+        return config['upload'].get('enabled', False)
+    return False
+
+
 # READ/WRITE AREA
 
 def set_capture_config(data):

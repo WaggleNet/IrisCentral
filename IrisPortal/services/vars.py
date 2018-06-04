@@ -12,6 +12,7 @@ def make_context():
         'configLock': manager.Lock(),
         'streams': manager.Namespace(),
         'filecopy': manager.Namespace(),
+        'uploader': manager.Namespace(),
         'logs': manager.Queue()
     }
     return context

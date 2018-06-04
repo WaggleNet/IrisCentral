@@ -36,6 +36,26 @@ def api_eject_drive():
         return jsonify(status='error', msg=e.__repr__())
 
 
+@app.route('/api/uploader')
+def api_get_uploader():
+    global context
+    return jsonify(get_uploader_status(context))
+
+
+@app.route('/api/uploader/set', methods=['GET', 'POST'])
+def api_set_uploader():
+    global context
+    set_uploader_config(context, request.json or request.form.to_dict())
+    return jsonify(status='ok')
+
+
+@app.route('/api/uploader/disable')
+def api_disable_uploader():
+    global context
+    disable_uploader(context)
+    return jsonify(status='ok')
+
+
 if __name__ == '__main__':
     if platform == 'win32':
         print('Sorry, IrisCentral does not support Windows.')
