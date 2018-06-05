@@ -53,7 +53,7 @@ def get_devices_dir():
     if 'media' in config['locations']:
         return config['locations']['media']
     if platform == 'linux' or platform == 'linux2':
-        return '/media/{}/'.format(getuser())
+        return '/media/'
     if platform == 'darwin':
         return '/Volumes/'
 
