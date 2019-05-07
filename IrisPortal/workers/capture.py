@@ -32,7 +32,7 @@ class capturerProcess(contextualProcess):
                 i['capture_cmd'] = get_capture_command(
                     directory=st_dir,
                     camera_id=i['id'],
-                    url=i['url']
+                    **i
                 )
                 i['status'] = 'pending'
             status = {i['id']: i for i in status}
@@ -44,7 +44,7 @@ class capturerProcess(contextualProcess):
         self.logger.info('Starting capture for {}'.format(k))
         streams_ = self.streams.status
         cmd_ = streams_[k]['capture_cmd']
-        self.logger.debug('Executing {}'.format(cmd_))
+        self.logger.debug('Executing {}'.format(' '.join(cmd_)))
         self.processes[k] = Popen(cmd_, stderr=DEVNULL, stdout=DEVNULL)
         # self.processes[k] = Popen(cmd_)
         streams_[k]['status'] = 'running'

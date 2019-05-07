@@ -6,16 +6,34 @@
   "video": {
     "cameras": [
       {
-        "url": "rtsp://iris01v.local:8554/",
+        "url": "/dev/video0",
         "type": "video",
-        "name": "Test Camera 800MP-IR",
-        "id": "iris01v"
+        "name": "Camera 1",
+        "protocol": "v4l2",
+        "id": "cam1",
+        "param": "-vcodec h264"
+      },
+      {
+        "url": "/dev/video2",
+        "type": "video",
+        "name": "Camera 2",
+        "protocol": "v4l2",
+        "id": "cam2",
+        "param": "-vcodec h264"
+      },
+      {
+        "url": "hw:2",
+        "type": "audio",
+        "name": "Audio Channel 1",
+        "protocol": "alsa -ac 1",
+        "id": "lav1",
+        "param": ""
       }
     ],
     "capturer": {
       "cmd": [
-        "ffmpeg", "-i", "{url}",
-        "-c copy -map 0 -strftime 1",
+        "ffmpeg", "-f {protocol}", "-i", "{url}",
+        "-c copy -map 0 -strftime 1",  "{param}",
         "-f segment -segment_time {interval} -segment_format mp4",
         "-use_wallclock_as_timestamps 1 -reset_timestamps 1",
         "-segment_list {directory}/{camera_id}_index.txt",
