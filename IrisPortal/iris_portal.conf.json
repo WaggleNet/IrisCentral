@@ -10,34 +10,31 @@
         "type": "video",
         "name": "Camera 1",
         "protocol": "v4l2",
-        "id": "cam1",
-        "param": "-vcodec h264"
+        "id": "cam1"
       },
       {
         "url": "/dev/video2",
         "type": "video",
         "name": "Camera 2",
         "protocol": "v4l2",
-        "id": "cam2",
-        "param": "-vcodec h264"
+        "id": "cam2"
       },
       {
         "url": "hw:2",
         "type": "audio",
         "name": "Audio Channel 1",
         "protocol": "alsa -ac 1",
-        "id": "lav1",
-        "param": ""
+        "id": "lav1"
       }
     ],
     "capturer": {
       "cmd": [
         "ffmpeg", "-f {protocol}", "-i", "{url}",
-        "-c copy -map 0 -strftime 1",  "{param}",
-        "-f segment -segment_time {interval} -segment_format mp4",
+        "-c copy -map 0 -strftime 1",  "{flags}",
+        "-f segment -segment_time {interval} -segment_format {extension}",
         "-use_wallclock_as_timestamps 1 -reset_timestamps 1",
         "-segment_list {directory}/{camera_id}_index.txt",
-        "{directory}/{camera_id}_out_%Y-%m-%d_%H-%M-%S.mp4"
+        "{directory}/{camera_id}_out_%Y-%m-%d_%H-%M-%S.{extension}"
       ],
       "config": {
         "interval": 60

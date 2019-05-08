@@ -32,6 +32,8 @@ class capturerProcess(contextualProcess):
                 i['capture_cmd'] = get_capture_command(
                     directory=st_dir,
                     camera_id=i['id'],
+                    extension='mp4' if i['type'] == 'video' else 'mp3',
+                    flags='-vcodec h264' if i['type'] == 'video' else '-acodec libmp3lame',
                     **i
                 )
                 i['status'] = 'pending'
