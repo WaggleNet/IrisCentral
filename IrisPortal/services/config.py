@@ -31,11 +31,8 @@ def get_capture_command(string=False, **kwargs):
         return cmd_str.format(**kwargs, **cmd_conf)
     cmd_list = []
     for i in cmd_:
-        cmd_list.extend(i.split())
-    return [
-        i.format(**kwargs, **cmd_conf)
-        for i in cmd_list
-    ]
+        cmd_list.extend(i.format(**kwargs, **cmd_conf).split())
+    return cmd_list
 
 
 def get_stream_dir():
