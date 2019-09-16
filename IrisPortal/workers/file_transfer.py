@@ -32,7 +32,8 @@ class fileTransferProcess(contextualProcess):
                             self.logger.info('Found new drive at {}'.format(i))
                             Path(i, 'iris').mkdir(exist_ok=True)
                             p.read(conf_path)
-                            disk_config = p.items('iris')
+                            disk_config = dict(p.items('iris'))
+                            # self.logger.info(disk_config)
                             disk_config['status'] = 'active'
                             if 'space_limit' in disk_config:
                                 disk_config['space_limit'] = parse_size(disk_config['space_limit'], binary=True)
@@ -51,6 +52,7 @@ class fileTransferProcess(contextualProcess):
                     drives[str(i)] = disk_config
             except Exception as e:
                 self.logger.debug('Ignoring drive {} due to {}'.format(i, e.__repr__()))
+                raise
         # Then clear up lost drives
         for i in old_drives - visited:
             if drives[str(i)]['status'] == 'active':
@@ -77,35 +79,44 @@ class fileTransferProcess(contextualProcess):
             available_files = []
             seg_lists = list(Path(stream_dir).glob('*_index.txt'))
             earliest_seg_ctime = None
+            # Copy current seglist clips
             if seg_lists:
                 earliest_seg_ctime = path.getctime(min(seg_lists, key=path.getctime))
+                self.logger.debug('Using seglist to retrieve ctime > %s', earliest_seg_ctime)
                 for i in seg_lists:
                     with open(i) as fp:
-                        available_files.extend([
-                            Path(stream_dir, j)
-                            for j in fp.readlines() if j and Path(stream_dir, j).exists()
-                        ])
+                        for j in fp.readlines()[:-1]:
+                            pp = Path(stream_dir) / j.strip('\n')
+                            if pp.exists():
+                                self.logger.debug('Adding %s to the list', pp)
+                                available_files.append(pp)
+                            # else:
+                                # self.logger.debug('%s does not exist, skipping', pp)
+            # Copy clips before the seglists are created
             available_files.extend([
-                j for j in Path(stream_dir).glob('*.mp4')
+                j for j in Path(stream_dir).glob('*.*')
                 if (path.getctime(j) < earliest_seg_ctime if earliest_seg_ctime else True)
+                and str(j).rfind('.txt') == -1
             ])
             available_files.sort(key=path.getctime)
             if len(available_files) == 0:
-                # self.logger.debug('Nothing to copy, quitting')
+                self.logger.debug('Nothing to copy, quitting')
                 return
-            to_copy = available_files[0]
-            candidate_drive = self.get_cadidate_drive(path.getsize(to_copy))
+            candidate_drive = self.get_cadidate_drive(path.getsize(available_files[0]))
             if candidate_drive:
                 # Mark the drive in use
                 drives = self.filecopy.drives
                 drives[candidate_drive]['in_use'] = True
                 self.filecopy.drives = drives
                 try:
-                    self.logger.debug('Starting to copy {} to {}'.format(to_copy, candidate_drive))
-                    # Actually copy it
-                    copy2(to_copy, str(Path(candidate_drive, 'iris')))
-                    remove(to_copy)
-                    self.logger.debug('{} copied and deleted.'.format(to_copy))
+                    for to_copy in available_files:
+                        if self.get_cadidate_drive(path.getsize(to_copy)) != candidate_drive:
+                            return  # Change drive
+                        self.logger.debug('Starting to copy {} to {}'.format(to_copy, candidate_drive))
+                        # Actually copy it
+                        copy2(to_copy, str(Path(candidate_drive, 'iris')))
+                        remove(to_copy)
+                        self.logger.debug('{} copied and deleted.'.format(to_copy))
                 finally:
                     # Mark the drive idle
                     drives = self.filecopy.drives
@@ -114,7 +125,9 @@ class fileTransferProcess(contextualProcess):
             else:
                 self.logger.info('No candidate drives, not copying.')
         except Exception as e:
-            self.logger.warning('Copy of {} failed due to error: {}'.format(to_copy, e.__repr__()))
+            self.logger.error('Copy of %s failed due to error', to_copy)
+            self.logger.error(e, exc_info=True)
+            raise
 
     def run(self):
         self.logger.info('Started')

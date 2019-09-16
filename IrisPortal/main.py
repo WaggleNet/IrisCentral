@@ -68,6 +68,6 @@ if __name__ == '__main__':
     p.start()
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
-    app.run()
+    app.run(host='0.0.0.0')
     # Join the child processes
     p.join()
