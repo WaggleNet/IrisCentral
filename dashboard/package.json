@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@vuikit/icons": "^0.8.0",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.19",
     "vue": "^2.5.2",
     "vuikit": "^0.8.0",
     "wretch": "^1.1.2"
